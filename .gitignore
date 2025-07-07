@@ -24,3 +24,9 @@ __pycache__/
 
 
 heart_model_rf_model.pkl
+
+*.pkl
+*.pt
+*.pth
+*.joblib
+*.sav
