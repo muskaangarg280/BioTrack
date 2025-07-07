@@ -74,18 +74,7 @@ class HybridModel:
 
     def save_all(self, prefix=""):
         torch.save(self.dnn.state_dict(), f"{prefix}dnn_model.pt")
-        joblib.dump(self.rf, f"{prefix}rf_model.pkl")
-        joblib.dump(self.meta_model, f"{prefix}meta_model.pkl")
-        joblib.dump(self.encoders, f"{prefix}encoders.pkl")
-        joblib.dump(self.scaler, f"{prefix}scaler.pkl")
-        joblib.dump(self.meta_scaler, f"{prefix}meta_scaler.pkl")
 
     def load_all(self, input_size, prefix=""):
         self.dnn = DNN(input_size)
         self.dnn.load_state_dict(torch.load(f"{prefix}dnn_model.pt", map_location="cpu"))
-        self.dnn.eval()
-        self.rf = joblib.load(f"{prefix}rf_model.pkl")
-        self.meta_model = joblib.load(f"{prefix}meta_model.pkl")
-        self.encoders = joblib.load(f"{prefix}encoders.pkl")
-        self.scaler = joblib.load(f"{prefix}scaler.pkl")
-        self.meta_scaler = joblib.load(f"{prefix}meta_scaler.pkl")
