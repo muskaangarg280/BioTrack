@@ -37,7 +37,7 @@ class OutputLayer(nn.Module):
         return self.linear(x)  # logits (used with BCEWithLogitsLoss)
 
 
-class HeartAttackDNN(nn.Module):
+class DNN(nn.Module):
     def __init__(self, input_size, hidden_size=256, depth=5, dropout=0.5):
         super().__init__()
         self.input_layer = InputLayer(input_size, hidden_size)
