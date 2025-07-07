@@ -3,10 +3,15 @@ import numpy as np
 import pandas as pd
 import torch
 from hybridModel import HybridModel
+import joblib
 
 # --- Load model ---
+# Load scaler
+scaler = joblib.load("heart_model_scaler.pkl")
+input_size = scaler.mean_.shape[0]
+
 model = HybridModel()
-model.load_state_dict(torch.load("heart_model_dnn_model.pt", map_location=torch.device("cpu")))
+model.load_all(input_size, prefix="heart_model_")
 model.eval()
 
 # --- Streamlit UI ---
