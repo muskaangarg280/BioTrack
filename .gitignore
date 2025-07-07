@@ -21,3 +21,6 @@ myenv/
 dnn_env/
 random_forest_model.pkl
 __pycache__/
+
+
+heart_model_rf_model.pkl
