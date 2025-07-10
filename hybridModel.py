@@ -47,7 +47,7 @@ class HybridModel:
         with torch.no_grad():
             dnn_preds_train = torch.sigmoid(self.dnn(torch.tensor(X_train, dtype=torch.float32).to(device))).cpu().numpy().flatten()
         
-        self.rf = RandomForestClassifier(n_estimators=15, max_depth=5, class_weight="balanced", random_state=42)
+        self.rf = RandomForestClassifier(n_estimators=100, class_weight="balanced", random_state=42)
         self.rf.fit(X_train, y_train)
         rf_preds_train = self.rf.predict_proba(X_train)[:, 1]
         
