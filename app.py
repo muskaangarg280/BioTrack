@@ -6,13 +6,9 @@ from hybridModel import HybridModel
 import joblib
 
 # --- Load model ---
-# Load scaler
-scaler = joblib.load("heart_model_scaler.pkl")
-input_size = scaler.mean_.shape[0]
 
-model = HybridModel()
-model.load_all(input_size, prefix="heart_model_")
-model.eval()
+model = HybridModel(31)
+model.load_all(31, prefix="heart_model_")  
 
 # --- Streamlit UI ---
 st.title("💓 Heart Attack Risk Predictor")
@@ -22,7 +18,7 @@ user_data = {}
 # --- Demographics ---
 with st.expander("🧍 Demographics & Lifestyle"):
     for col in ["Sex", "AgeCategory", "GeneralHealth", "SmokerStatus", "ECigaretteUsage", "TetanusLast10Tdap"]:
-        user_data[col] = st.selectbox(f"{col}:", ["0", "1"], key=col)  # simplified classes
+        user_data[col] = st.selectbox(f"{col}:", ["0", "1"], key=col) 
 
 # --- Physical Measures ---
 with st.expander("📐 Physical Measurements"):
@@ -48,6 +44,7 @@ with st.expander("🧪 Additional"):
         user_data[col] = st.selectbox(f"{col}:", ["No", "Yes"], key=col)
 
 # --- Predict ---
+# Predict
 if st.button("Predict"):
     df_input = pd.DataFrame([user_data])
 
@@ -62,15 +59,13 @@ if st.button("Predict"):
 
     df_input.fillna(0, inplace=True)
 
-    # Convert to tensor
     X_tensor = torch.tensor(df_input.values, dtype=torch.float32)
 
-    # Predict
-    with torch.no_grad():
-        proba = torch.sigmoid(model(X_tensor)).numpy()[0]
+    # ✅ Use predict_proba from HybridModel
+    proba, _ = model.predict_proba(X_tensor.numpy())
 
-    st.markdown(f"### 🧪 Predicted Heart Attack Risk: `{proba:.2%}`")
-    if proba > 0.5:
+    st.markdown(f"### 🧪 Predicted Heart Attack Risk: `{proba[0]:.2%}`")
+    if proba[0] > 0.5:
         st.error("⚠️ High Risk")
     else:
         st.success("✅ Low Risk")
