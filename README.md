@@ -1,29 +1,27 @@
 # BioTrack: Heart Attack Risk Prediction System
 
-**BioTrack** is a machine learning-based application built to predict heart attack risk using clinical and lifestyle health data. With a focus on **accuracy**, **explainability**, and **user accessibility**, BioTrack empowers individuals and healthcare professionals with real-time predictions and insight into contributing health factors.
+[Launch App ](https://biotrackai-pjkruicdn7fcmfgkj4x6pe.streamlit.app/)
+
+**BioTrackAI** is a hybrid machine learning system designed to predict the risk of heart attacks using both clinical and lifestyle data. It combines Random Forests, Deep Neural Networks, and Logistic Regression in a stacked ensemble for robust and explainable predictions.
 
 ---
+## Features
 
-## 🚀 Features
-
-- **High-Accuracy Prediction** — Achieves **94% accuracy** on the test set  
-- **SHAP Explainability** — Understand **why** a prediction was made  
-- **Hybrid Model** — Combines **Random Forest** + **Deep Neural Network (DNN)**  
-- **Evaluation Tools** — Confusion matrix, ROC AUC, F1 score, and more  
-- **Web-Based Interface** — (Planned) Interactive UI via **Streamlit** or **Flask**  
-- **Secure & Scalable** — Architecture ready for deployment and scaling
-
+- **Hybrid Architecture**:
+  - Random Forest + Deep Neural Network
+  - Logistic Regression meta-learner on stacked outputs
+- **Strong Performance**:
+  - Accuracy: ~94%
+  - AUC-ROC: ~0.79
+  - F1 Score optimized with a custom threshold search
+- **Interactive UI**:
+  - Built with Streamlit
+  - Accepts medical, lifestyle, and demographic inputs
 ---
+## Try It Yourself
 
-## Tech Stack
-
-- **Languages**: Python  
-- **Model**: Hybrid of `RandomForestClassifier` & custom `DNN`  
-- **Libraries**:  
-  - `scikit-learn`  
-  - `pandas`, `numpy`  
-  - `shap`, `matplotlib`, `seaborn`  
-  - `torch` (for DNN)
+Head to [biotrackai streamlit app](https://biotrackai-pjkruicdn7fcmfgkj4x6pe.streamlit.app/)  
+Enter your demographic, medical, and lifestyle data to get an immediate risk score.
 
 ---
 
@@ -34,11 +32,49 @@
   - Precision, Recall, F1 Score, AUC-ROC  
   - Confusion Matrix  
   - Predicted vs Actual Probability plots
-
-- **Explainability**:
-  - SHAP bar plots & beeswarm plots for **global** and **individual** feature impact  
-  - Plots auto-saved as `.png` for easy visualization
  
+## Tech Stack
+
+| Layer         | Technology                  |
+|---------------|-----------------------------|
+| Modeling      | PyTorch, scikit-learn       |
+| Preprocessing | pandas, numpy, sklearn      |
+| Evaluation    | matplotlib, sklearn metrics |
+| UI            | Streamlit                   |
+| Packaging     | joblib, torch               |
+
+---
+
+
+## 📁 File Structure
+
+```
+📂 BioTrackAI/
+├── app.py              # Streamlit app for user interaction
+├── train.py            # End-to-end training pipeline
+├── DNNmodel.py         # Deep Neural Network architecture (PyTorch)
+├── hybridModel.py      # Hybrid ensemble with DNN, RF, and meta model
+├── p1.csv              # Testing dataset
+├── p2.csv              # Training dataset
+├── requirements.txt    # Python dependencies
+├── requirements.txt
+├── requirements.txt
+├── requirements.txt
+├── requirements.txt
+├── requirements.txt 
+└── README.md           # This file
+```
+
+ ---
+
+## Future Enhancements
+
+- Add multi-language support
+- Add SHAP analysis
+- Make it mobile-responsive
+- Exportable health reports
+- Try alternative ML models (e.g. XGBoost, Random Forest)
+
 ---
 
  ## Dataset Attribution
