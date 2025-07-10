@@ -49,20 +49,22 @@ Enter your demographic, medical, and lifestyle data to get an immediate risk sco
 ## 📁 File Structure
 
 ```
-📂 BioTrackAI/
-├── app.py              # Streamlit app for user interaction
-├── train.py            # End-to-end training pipeline
-├── DNNmodel.py         # Deep Neural Network architecture (PyTorch)
-├── hybridModel.py      # Hybrid ensemble with DNN, RF, and meta model
-├── p1.csv              # Testing dataset
-├── p2.csv              # Training dataset
-├── requirements.txt    # Python dependencies
-├── requirements.txt
-├── requirements.txt
-├── requirements.txt
-├── requirements.txt
-├── requirements.txt 
-└── README.md           # This file
+├── app.py                         # Streamlit UI
+├── train.py                       # Training script
+├── DNNmodel.py                    # PyTorch DNN definition
+├── hybridModel.py                 # Hybrid model wrapper - DNN + Random Classifier
+├── p1.csv                         # Test data
+├── p2.csv                         # Training data
+├── requirements.txt               # Dependencies
+├── .gitignore
+│
+├── heart_model_dnn_model.pt       # Trained DNN weights
+├── heart_model_rf_model.pkl       # Random Forest model
+├── heart_model_meta_model.pkl     # Meta model (LogReg)
+├── heart_model_encoders.pkl       # LabelEncoders for categorical data
+├── heart_model_scaler.pkl         # Scaler for input features
+├── heart_model_meta_scaler.pkl    # Scaler for meta model input
+└── README.md                      # This file
 ```
 
  ---
