@@ -1,6 +1,6 @@
 # BioTrack: Heart Attack Risk Prediction System
 
-[Launch App ](https://biotrackai-pjkruicdn7fcmfgkj4x6pe.streamlit.app/)
+[Launch App ](https://biotrack-dmlndhd86ukabaxfk2j367.streamlit.app/)
 
 **BioTrackAI** is a hybrid machine learning system designed to predict the risk of heart attacks using both clinical and lifestyle data. It combines Random Forests, Deep Neural Networks, and Logistic Regression in a stacked ensemble for robust and explainable predictions.
 
