@@ -20,7 +20,7 @@
 ---
 ## Try It Yourself
 
-Head to [biotrackai streamlit app](https://biotrackai-pjkruicdn7fcmfgkj4x6pe.streamlit.app/)  
+Head to [biotrackai streamlit app](https://biotrack-dmlndhd86ukabaxfk2j367.streamlit.app/)  
 Enter your demographic, medical, and lifestyle data to get an immediate risk score.
 
 ---
