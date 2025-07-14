@@ -3,49 +3,69 @@ import numpy as np
 import pandas as pd
 import torch
 from hybridModel import HybridModel
-import joblib
 
 # --- Load model ---
-
 model = HybridModel(31)
 model.load_all(31, prefix="heart_model_")  
 
-# --- Streamlit UI ---
-st.title("💓 Heart Attack Risk Predictor")
+# --- App Title ---
+st.title("Heart Attack Risk Assessment Tool")
+st.markdown("""
+This tool uses a hybrid machine learning model to predict an individual's risk of experiencing a heart attack based on health, lifestyle, and medical history information.
+""")
 
 user_data = {}
 
-# --- Demographics ---
-with st.expander("🧍 Demographics & Lifestyle"):
-    for col in ["Sex", "AgeCategory", "GeneralHealth", "SmokerStatus", "ECigaretteUsage", "TetanusLast10Tdap"]:
-        user_data[col] = st.selectbox(f"{col}:", ["0", "1"], key=col) 
+# --- Section: Demographics & Lifestyle ---
+st.header("Demographics & Lifestyle")
+with st.container():
+    user_data["Sex"] = st.selectbox("Sex", ["Male", "Female"])
+    user_data["AgeCategory"] = st.selectbox("Age Category", [
+        "18-24", "25-29", "30-34", "35-39", "40-44", "45-49",
+        "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80+"
+    ])
+    user_data["GeneralHealth"] = st.selectbox("General Health", [
+        "Excellent", "Very good", "Good", "Fair", "Poor"
+    ])
+    user_data["SmokerStatus"] = st.selectbox("Smoker Status", [
+        "Never smoked", "Former smoker", "Current smoker"
+    ])
+    user_data["ECigaretteUsage"] = st.selectbox("E-Cigarette Usage", [
+        "Never used", "Tried once or twice", "Occasional user", "Regular user"
+    ])
+    user_data["TetanusLast10Tdap"] = st.selectbox("Tetanus Vaccine (Last 10 Years)", [
+        "Yes", "No", "Not sure"
+    ])
 
-# --- Physical Measures ---
-with st.expander("📐 Physical Measurements"):
+# --- Section: Physical Measurements ---
+st.header("Physical Measurements")
+with st.container():
     for col in ["HeightInMeters", "WeightInKilograms", "BMI"]:
-        user_data[col] = st.number_input(f"{col}:", min_value=0.0, step=0.1, key=col)
+        user_data[col] = st.number_input(f"{col.replace('In', ' (in ').replace('Kilograms', 'kg)').replace('Meters', 'm)')}", min_value=0.0, step=0.1)
 
-# --- Medical History ---
-with st.expander("🩺 Medical Conditions"):
+# --- Section: Medical History ---
+st.header("Medical History")
+with st.container():
     for col in ["HadAngina", "HadStroke", "HadAsthma", "HadSkinCancer", "HadCOPD",
                 "HadDepressiveDisorder", "HadKidneyDisease", "HadArthritis", "HadDiabetes"]:
-        user_data[col] = st.selectbox(f"{col}:", ["No", "Yes"], key=col)
+        user_data[col] = st.selectbox(col.replace("Had", "History of "), ["No", "Yes"])
 
-# --- Risk Factors ---
-with st.expander("💉 Risk Factors"):
+# --- Section: Risk Factors ---
+st.header("Other Health Factors")
+with st.container():
     for col in ["AlcoholDrinkers", "HIVTesting", "FluVaxLast12", "PneumoVaxEver",
                 "HighRiskLastYear", "CovidPos"]:
-        user_data[col] = st.selectbox(f"{col}:", ["No", "Yes"], key=col)
+        user_data[col] = st.selectbox(col.replace("Vax", " Vaccine").replace("CovidPos", "Tested Positive for COVID-19"), ["No", "Yes"])
 
-# --- Additional ---
-with st.expander("🧪 Additional"):
+# --- Section: Accessibility & Functional Limitations ---
+st.header("Additional Information")
+with st.container():
     for col in ["DeafOrHardOfHearing", "BlindOrVisionDifficulty", "DifficultyConcentrating", "DifficultyWalking",
                 "DifficultyDressingBathing", "DifficultyErrands", "ChestScan"]:
-        user_data[col] = st.selectbox(f"{col}:", ["No", "Yes"], key=col)
+        user_data[col] = st.selectbox(col.replace("Difficulty", "Issues with ").replace("Or", " or "), ["No", "Yes"])
 
-# --- Predict ---
-# Predict
-if st.button("Predict"):
+# --- Predict Button ---
+if st.button("Assess Risk", key="predict_button"):
     df_input = pd.DataFrame([user_data])
 
     # Convert Yes/No to 1/0
@@ -54,18 +74,29 @@ if st.button("Predict"):
             df_input[col] = 1
         elif df_input[col].iloc[0] == "No":
             df_input[col] = 0
-        else:
-            df_input[col] = pd.to_numeric(df_input[col], errors="coerce")
 
-    df_input.fillna(0, inplace=True)
+    # Apply encoders
+    for col, le in model.encoders.items():
+        if col in df_input.columns:
+            df_input[col] = df_input[col].astype(str).apply(
+                lambda x: x if x in le.classes_ else le.classes_[0]
+            )
+            df_input[col] = le.transform(df_input[col])
 
-    X_tensor = torch.tensor(df_input.values, dtype=torch.float32)
+    # Ensure feature set matches training
+    expected_cols = model.scaler.feature_names_in_
+    for col in expected_cols:
+        if col not in df_input.columns:
+            df_input[col] = 0
+    df_input = df_input[expected_cols]
 
-    # ✅ Use predict_proba from HybridModel
-    proba, _ = model.predict_proba(X_tensor.numpy())
+    # Scale and predict
+    X_scaled = model.scaler.transform(df_input)
+    proba, _ = model.predict_proba(X_scaled)
 
-    st.markdown(f"### 🧪 Predicted Heart Attack Risk: `{proba[0]:.2%}`")
+    st.subheader("Prediction Result")
+    st.write(f"Estimated Risk: **{proba[0]:.2%}**")
     if proba[0] > 0.5:
-        st.error("⚠️ High Risk")
+        st.error("This individual is at high risk for a heart attack.")
     else:
-        st.success("✅ Low Risk")
+        st.success("This individual is at low risk for a heart attack.")
